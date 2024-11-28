@@ -1,4 +1,3 @@
-import json
 from BookShop import BookShop
 
 class Book:
