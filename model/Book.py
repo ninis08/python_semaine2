@@ -69,4 +69,11 @@ if __name__ == "__main__":
 
     book_shop.save_in_json()
 
+    book_shop = BookShop('', None)
+    book_shop = book_shop.get_json_file()
+
+    book_shop = BookShop.get_json_file_cls()
+
+
+
                 
