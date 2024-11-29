@@ -22,8 +22,10 @@ class BookShop:
         self.__books.append(book)
 
     def sell_book(self, book):
-        if not book.numeric and book in self.__books and book.quantity > 0:
-            self.__books.remove(book)
-            book.quantity -= 1
-            return True
+        if book in self.__books:
+            if not book.numeric and book.quantity > 0:
+                book.quantity -= 1
+                return True
+            if book.numeric:
+                return True
         return False

@@ -2,6 +2,7 @@ from model.BookShop import BookShop
 from model.User import User
 from model.Book import Book
 import os
+import json
 import jsonpickle
 
 class Application:
@@ -32,7 +33,7 @@ class Application:
             title,
             author,
             tags.split(','),
-            bool(is_numeric),
+            json.loads(is_numeric.lower()),
             float(price),
             int(quantity))
 
@@ -66,7 +67,7 @@ class Application:
             book_index = int(input("Entrez le numéro du livre à acheter : ")) - 1
             if 0 <= book_index < len(self.__bookshop.books):
                 book = self.__bookshop.books[book_index]
-                if self.__user.buy_book(self.__bookshop.books, book):
+                if self.__user.buy_book(self.__bookshop, book):
                     print(f"Vous avez acheté '{book.title}'.")
             else:
                 print("Numéro invalide. Veuillez réessayer.")
