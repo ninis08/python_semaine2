@@ -28,7 +28,7 @@ def buy_book():
 
 
 def exit_program():
-     return
+     exit(1)
 
 def main():
     actions = {
@@ -43,7 +43,7 @@ def main():
         print("1. Afficher les livres")
         print("2. Acheter un livre")
         print("2a. Créer un livre")
-        print("5. Quitter")
+        print("3. Quitter")
         print("=======================")
         choix = input("Entrez votre choix : ")
 
@@ -51,6 +51,6 @@ def main():
         if action:
             action()  # Appel de la fonction associée
         else:
-            print("Veuillez sélectionner une option entre 1 et 5.")
+            print(f"Veuillez sélectionner une option entre 1 et {len(actions.keys())}.")
 
 main()
