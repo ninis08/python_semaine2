@@ -1,7 +1,7 @@
 class BookCase:
-    def __init__(self, id, books):
+    def __init__(self, id):
         self.__id = id
-        self.__books = books
+        self.__books = list()
 
     @property
     def id(self):
