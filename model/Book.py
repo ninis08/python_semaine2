@@ -1,5 +1,3 @@
-from BookShop import BookShop
-
 class Book:
     def __init__(self, title, author, tags, numeric, price, quantity):
         self.__title = title
@@ -58,22 +56,8 @@ class Book:
             
 
 if __name__ == "__main__":
-    # Create a book shop
     books = [
         Book("Book 1", 100, 20, False, 12, 5),
         Book("Book 2", 50, 15, True, 5, 5),
         Book("Book 3", 200, 30, False, 8, 5)
     ]
-
-    book_shop = BookShop('test', books)
-
-    book_shop.save_in_json()
-
-#    book_shop = BookShop('', None)
-#    book_shop = book_shop.get_json_file()
-
-    book_shop = BookShop.get_json_file_cls()
-    print(book_shop)
-
-
-                
