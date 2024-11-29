@@ -53,12 +53,6 @@ class Book:
     def remove_tag(self, tag):
         if tag in self.tags:
             self.__tags.remove(tag)
-
-    # def __str__(self):
-    #     return self.__title
-    
-    # def __repr__(self):
-    #     return f"Book({self.title}, {self.author}, {self.tags}, {self.numeric}, {self.price}, {self.quantity})"
             
 
 if __name__ == "__main__":

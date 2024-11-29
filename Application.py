@@ -2,7 +2,6 @@ from model.BookShop import BookShop
 from model.User import User
 from model.Book import Book
 import os
-import json
 import jsonpickle
 
 class Application:
@@ -10,8 +9,7 @@ class Application:
     __json_file = "application-bib.json"
 
     def __init__(self):
-        self.__user = User('admin')
-        self.__bookshop = BookShop()
+        self.reload()
         self.__actions = {
             "1": self.display_books,
             "2": self.buy_book,
@@ -21,24 +19,10 @@ class Application:
             "5": self.exit_program,
         }
 
-    def add_book_in_bookshop(self):
-        title = input("Titre: ")
-        author = input("Auteur: ")
-        tags = input("Liste des tags [tag1,tag2,...]: ")
-        is_numeric = input("Livre numérique ? ")
-        price = input("Prix unitaire: ")
-        quantity = input("Quantité: ")
-
-        book = Book(
-            title,
-            author,
-            tags.split(','),
-            json.loads(is_numeric.lower()),
-            float(price),
-            int(quantity))
-
-        self.__bookshop.add_book(book)
+    def add_book_in_bookshop(self, book):
+        self.__bookshop.add_book(jsonpickle.decode(book))
         self.save_in_json()
+        return ('Livre bien ajouté')
 
     def save_in_json(self):
         with open(self.__json_file, "w") as f:
@@ -54,25 +38,21 @@ class Application:
             self.__user = application._Application__user
         return True
 
-    def display_books(self):
-        print("\n=== Liste des Livres Disponibles ===")
-        for index, book in enumerate(self.__bookshop.books):
-            print(f"[{index + 1}] Titre: {book.title}, Auteur: {book.author}, "
-                  f"Prix: {book.price}€, Quantité: {book.quantity}, Tags: {book.tags}")
-        print("====================================\n")
+    def display_books(self, *args):
+        return self.__bookshop.books
 
-    def buy_book(self):
-        self.display_books()
+    def buy_book(self, book_index):
+        book_index = int(book_index)
         try:
-            book_index = int(input("Entrez le numéro du livre à acheter : ")) - 1
             if 0 <= book_index < len(self.__bookshop.books):
                 book = self.__bookshop.books[book_index]
+                print(book)
                 if self.__user.buy_book(self.__bookshop, book):
-                    print(f"Vous avez acheté '{book.title}'.")
+                    return (f"Vous avez acheté '{book.title}'.")
             else:
-                print("Numéro invalide. Veuillez réessayer.")
+                return ("Numéro invalide. Veuillez réessayer.")
         except ValueError:
-            print("Entrée invalide. Veuillez entrer un numéro.")
+            return ("Entrée invalide. Veuillez entrer un numéro.")
 
     def save_library(self):
         self.save_in_json()
