@@ -1,8 +1,9 @@
 from model.BookShop import BookShop
-from model.User import User
 from model.Book import Book
+from model.Base import Base
 import os
 import jsonpickle
+from sqlalchemy import create_engine
 
 class Application:
 
@@ -10,6 +11,8 @@ class Application:
 
     def __init__(self):
         self.reload()
+        self.__engine = create_engine('sqlite+pysqlite:///application.db', echo=True)
+        Base.metadata.create_all(self.__engine)
 
     def add_book_in_bookshop(self, book):
         self.__bookshop.add_book(jsonpickle.decode(book))

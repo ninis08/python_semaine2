@@ -1,20 +1,14 @@
-class BookCase:
-    def __init__(self, id, books = None):
-        self.__id = id
-        if books:
-            self.__books = books
-        else:
-            self.__books = list()
+from typing import List
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+from .Base import Base
 
-    @property
-    def id(self):
-        return self.__id
-    
-    @id.setter
-    def id(self, value):
-        self.__id = value
+class BookCase(Base):
 
-    def add_book(self, book):
-        self.__books.append(book)
+    __tablename__ = 'book_bookcase'
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    books: Mapped[List['Book']] = relationship()
 
             

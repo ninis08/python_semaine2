@@ -1,25 +1,25 @@
-class BookShop:
-    def __init__(self, shop_name="", books=None):
-        self.__shop_name = shop_name
-        if books:
-            self.__books = books
-        else:
-            self.__books = []
+from sqlalchemy.orm import DeclarativeBase
+from typing import List
+from typing import Optional
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
+from sqlalchemy import Boolean
+from sqlalchemy import Integer
+from sqlalchemy import Text
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
+from .Base import Base
 
-    @property
-    def books(self):
-        return self.__books.copy()
 
-    @property
-    def shop_name(self):
-        return self.__shop_name
+class BookShop(Base):
 
-    @shop_name.setter
-    def shop_name(self, value):
-        self.__shop_name = value
+    __tablename__ = 'book_bookshop'
 
-    def add_book(self, book):
-        self.__books.append(book)
+    id: Mapped[int] = mapped_column(primary_key=True)
+    books: Mapped[List['Book']] = relationship()
+    shop_name: Mapped[str] = mapped_column(String())
 
     def sell_book(self, book):
         if book in self.__books:

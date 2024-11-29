@@ -163,3 +163,4 @@ cython_debug/
 
 books.json
 application-bib.json
+*.db
