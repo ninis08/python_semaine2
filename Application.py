@@ -14,10 +14,31 @@ class Application:
         self.__actions = {
             "1": self.display_books,
             "2": self.buy_book,
+            "2a": self.add_book_in_bookshop,
             "3": self.save_library,
             "4": self.reload_library,
             "5": self.exit_program,
         }
+
+    def add_book_in_bookshop(self):
+        title = input("Titre: ")
+        author = input("Auteur: ")
+        tags = input("Liste des tags [tag1,tag2,...]: ")
+        is_numeric = input("Livre numérique ? ")
+        price = input("Prix unitaire: ")
+        quantity = input("Quantité: ")
+
+        book = Book(
+            title,
+            author,
+            tags.split(','),
+            bool(is_numeric),
+            float(price),
+            int(quantity))
+
+        self.__bookshop.add_book(book)
+        self.save_in_json()
+
     def save_in_json(self):
         with open(self.__json_file, "w") as f:
             f.write(jsonpickle.encode(self))
@@ -73,6 +94,7 @@ class Application:
             print("\n=== Menu Principal ===")
             print("1. Afficher les livres")
             print("2. Acheter un livre")
+            print("2a. Créer un livre")
             print("3. Enregistrer la librairie")
             print("4. Recharger la librairie")
             print("5. Quitter")
