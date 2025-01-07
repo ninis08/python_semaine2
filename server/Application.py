@@ -1,3 +1,4 @@
+from client.handler import handle_request
 from model.BookShop import BookShop
 from model.Book import Book
 from model.Base import Base
@@ -33,8 +34,17 @@ class Application:
             self.__user = application._Application__user
         return True
 
-    def display_books(self, *args):
-        return self.__bookshop.books
+    def display_books():
+        print("\n=== Liste des Livres Disponibles ===")
+        response = handle_request('display_books//')
+        
+        # Assurez-vous que 'response' est une liste de dictionnaires et utilisez from_dict
+        books = [Book.from_dict(book_data) for book_data in response]
+        
+        for index, book in enumerate(books):
+            print(f"[{index + 1}] Titre: {book.title}, Auteur: {book.author}, "
+                f"Prix: {book.price}€, Quantité: {book.quantity}, Tags: {book.tags}")
+        print("====================================\n")
 
     def buy_book(self, book_index):
         book_index = int(book_index)

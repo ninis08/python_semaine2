@@ -1,40 +1,44 @@
-from Application import Application
-import socketserver
+import socket
 import jsonpickle
+from model.Book import Book
+from model.BookShop import BookShop
+from model.BookCase import BookCase
 
-class MyTCPHandler(socketserver.BaseRequestHandler):
-    """
-    The request handler class for our server.
+def handle_request(request_data):
+    # Analyser la requête
+    try:
+        # Par exemple, on pourrait exécuter des actions en fonction de la requête
+        if "display_books" in request_data:
+            books = BookShop.get_books()  
+            return jsonpickle.encode(books)
+        elif "add_book_in_bookshop" in request_data:
+            book = jsonpickle.decode(request_data.split("//")[1])
+            BookShop.add_book(book)  # Ajoutez un livre dans la librairie
+            return jsonpickle.encode({"status": "Book added successfully!"})
+        elif "buy_book" in request_data:
+            book_index = int(request_data.split("//")[1])
+            BookShop.buy_book(book_index)  # Achetez le livre
+            return jsonpickle.encode({"status": "Book bought successfully!"})
+    except Exception as e:
+        return jsonpickle.encode({"error": str(e)})
 
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
+def start_server():
+    host = 'localhost'
+    port = 9999
 
-    def handle(self):
-        # self.request is the TCP socket connected to the client
-        self.data = self.request.recv(1024).strip()
-        method, params = self.data.decode('utf-8').split('//')
-        application = Application()
-        actions = {
-            "display_books": application.display_books,
-            "buy_book": application.buy_book,
-            "add_book_in_bookshop": application.add_book_in_bookshop,
-        }
-        action = actions.get(method)
-        if action:
-            response = action(params)  # Appel de la fonction associée
-        else:
-            response = f"Veuillez sélectionner une option entre 1 et {len(actions)}."
-        print(jsonpickle.encode(response).encode('utf-8'))
-        # just send back the same data, but upper-cased
-        self.request.sendall( jsonpickle.encode(response).encode('utf-8') )
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+        server_socket.bind((host, port))
+        server_socket.listen(1)
+        print(f"Serveur en attente de connexion sur {host}:{port}...")
+        
+        while True:
+            client_socket, client_address = server_socket.accept()
+            with client_socket:
+                print(f"Connexion établie avec {client_address}")
+                data = client_socket.recv(1024).decode()
+                if data:
+                    response = handle_request(data)
+                    client_socket.sendall(response.encode())
 
 if __name__ == "__main__":
-    HOST, PORT = "localhost", 9999
-
-    # Create the server, binding to localhost on port 9999
-    with socketserver.TCPServer((HOST, PORT), MyTCPHandler) as server:
-        # Activate the server; this will keep running until you
-        # interrupt the program with Ctrl-C
-        server.serve_forever()
+    start_server()

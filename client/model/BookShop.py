@@ -13,7 +13,7 @@ class BookShop:
     @property
     def shop_name(self):
         return self.__shop_name
-
+ 
     @shop_name.setter
     def shop_name(self, value):
         self.__shop_name = value
